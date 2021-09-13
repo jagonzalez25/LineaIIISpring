@@ -9,6 +9,11 @@ import cundi.edu.co.demo.service.IEstudianteService;
 @Service
 public class EstudianteServiceImpl implements IEstudianteService{
 
+	/**
+	 * @author Johans
+	 * @return EstudianteDto
+	 * @throws ModelNotFoundException, Exception
+	 */
 	@Override
 	public EstudianteDto retornar(int i) throws ModelNotFoundException, Exception {
 		if(i <= 10) {

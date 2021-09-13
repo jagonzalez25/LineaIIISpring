@@ -27,7 +27,8 @@ public class EstudianteController {
 	//@RequestMapping(value = "/obtener", method = RequestMethod.GET)
 	@GetMapping(value = "/obtener/{i}" ,produces = "application/json")
 	public ResponseEntity<?> retonar(@PathVariable int i) throws ModelNotFoundException, Exception {
-		EstudianteDto estudiante = service.retornar(i);
+		EstudianteDto estudiante;
+	    estudiante = service.retornar(i);
 		return new ResponseEntity<EstudianteDto>(estudiante, HttpStatus.OK);	
 		//return ResponseEntity.ok(est);
 	}
