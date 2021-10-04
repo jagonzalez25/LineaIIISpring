@@ -1,6 +1,10 @@
 package cundi.edu.co.demo.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cundi.edu.co.demo.dto.EstudianteDto;
+import cundi.edu.co.demo.entity.Estudiante;
 import cundi.edu.co.demo.exception.ModelNotFoundException;
 import cundi.edu.co.demo.service.IEstudianteService;
 
@@ -25,6 +30,34 @@ public class EstudianteController {
 	private IEstudianteService service;
 	
 	//@RequestMapping(value = "/obtener", method = RequestMethod.GET)
+	@GetMapping(value = "/obtener" ,produces = "application/json")
+	public ResponseEntity<?> retonar() {
+		List<Estudiante> listaEstudiante = service.retornarTodo();
+		return new ResponseEntity<List<Estudiante>>(listaEstudiante, HttpStatus.OK);	
+	}
+	
+	@GetMapping(value = "/obtenerPaginado/{page}/{size}" ,produces = "application/json")
+	public ResponseEntity<?> retonarPaginado(@PathVariable int page, @PathVariable int size) {
+		Page<Estudiante> listaEstudiante = service.retornarPaginado(page, size);
+		return new ResponseEntity<Page<Estudiante>>(listaEstudiante, HttpStatus.OK);	
+	}	
+	
+	@GetMapping(value = "/obtenerPaginado" ,produces = "application/json")
+	public ResponseEntity<?> retonarPaginado(Pageable page) {
+		Page<Estudiante> listaEstudiante = service.retornarPaginado(page);
+		return new ResponseEntity<Page<Estudiante>>(listaEstudiante, HttpStatus.OK);	
+	}	
+	
+	@GetMapping(value = "/obtenerPorId/{idEstudiante}" ,produces = "application/json")
+	public ResponseEntity<?> retonarPorId(@PathVariable int idEstudiante) throws ModelNotFoundException {
+		Estudiante estudainte = service.retonarPorId(idEstudiante);
+		return new ResponseEntity<Estudiante>(estudainte, HttpStatus.OK);	
+	}		
+		
+	
+	
+	
+	//@RequestMapping(value = "/obtener", method = RequestMethod.GET)
 	@GetMapping(value = "/obtener/{i}" ,produces = "application/json")
 	public ResponseEntity<?> retonar(@PathVariable int i) throws ModelNotFoundException, Exception {
 		EstudianteDto estudiante;
@@ -34,8 +67,8 @@ public class EstudianteController {
 	}
 	
 	@PostMapping(value = "/insertar", consumes = "application/json")
-	public ResponseEntity<?> guardar(@RequestBody EstudianteDto estudiante) {
-		EstudianteDto est  = new EstudianteDto("Johans", "Gonzalez");
+	public ResponseEntity<?> guardar(@RequestBody Estudiante estudiante) {
+		service.guardar(estudiante);
 		return new ResponseEntity<Object>(HttpStatus.CREATED);
 	}
 	
