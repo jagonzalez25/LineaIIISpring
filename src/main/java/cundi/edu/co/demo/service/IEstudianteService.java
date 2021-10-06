@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 
 import cundi.edu.co.demo.dto.EstudianteDto;
 import cundi.edu.co.demo.entity.Estudiante;
+import cundi.edu.co.demo.exception.ArgumentRequiredException;
+import cundi.edu.co.demo.exception.ConflictException;
 import cundi.edu.co.demo.exception.ModelNotFoundException;
 
 public interface IEstudianteService {
@@ -21,9 +23,9 @@ public interface IEstudianteService {
 	
 	public EstudianteDto retornar(int i) throws ModelNotFoundException, Exception;
 	
-	public void guardar(Estudiante estudiante);
+	public void guardar(Estudiante estudiante)  throws ConflictException;
 	
-	public void editar(EstudianteDto estudiante);
+	public void editar(Estudiante estudiante)  throws ArgumentRequiredException, ModelNotFoundException, ConflictException;
 	
-	public void eliminar(int i);
+	public void eliminar(int idEstudiante) throws ModelNotFoundException;
 }

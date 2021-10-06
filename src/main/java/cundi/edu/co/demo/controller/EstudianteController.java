@@ -2,6 +2,8 @@ package cundi.edu.co.demo.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cundi.edu.co.demo.dto.EstudianteDto;
 import cundi.edu.co.demo.entity.Estudiante;
+import cundi.edu.co.demo.exception.ArgumentRequiredException;
+import cundi.edu.co.demo.exception.ConflictException;
 import cundi.edu.co.demo.exception.ModelNotFoundException;
 import cundi.edu.co.demo.service.IEstudianteService;
 
@@ -67,23 +71,27 @@ public class EstudianteController {
 	}
 	
 	@PostMapping(value = "/insertar", consumes = "application/json")
-	public ResponseEntity<?> guardar(@RequestBody Estudiante estudiante) {
+	public ResponseEntity<?> guardar(@Valid @RequestBody Estudiante estudiante) throws ConflictException {
 		service.guardar(estudiante);
 		return new ResponseEntity<Object>(HttpStatus.CREATED);
 	}
 	
+	
 	@PutMapping(value = "/editar", consumes = "application/json")
-	public ResponseEntity<?> editar(@RequestBody EstudianteDto estudiante) {
-		EstudianteDto est  = new EstudianteDto("Johans", "Gonzalez");
+	public ResponseEntity<?> editar(@Valid @RequestBody Estudiante estudiante)  
+				throws ArgumentRequiredException, ModelNotFoundException, ConflictException{
+		this.service.editar(estudiante);
 		return new ResponseEntity<Object>(HttpStatus.OK);
 	}	
 	
 	//204
 	@DeleteMapping(value = "/eliminar/{i}")
-	public ResponseEntity<?> eliminar(@PathVariable int i) {
-		EstudianteDto est  = new EstudianteDto("Johans", "Gonzalez " + i);
+	public ResponseEntity<?> eliminar(@PathVariable int i)  throws ModelNotFoundException{
+		this.service.eliminar(i);
 		return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
 	}	
+	
+	
 	
 	@DeleteMapping(value = "/eliminarHeader/{i}")
 	public ResponseEntity<?> eliminarConHeader(@PathVariable int i) {

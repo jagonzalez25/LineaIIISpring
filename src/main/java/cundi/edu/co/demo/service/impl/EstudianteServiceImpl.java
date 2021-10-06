@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import cundi.edu.co.demo.dto.EstudianteDto;
 import cundi.edu.co.demo.entity.Estudiante;
+import cundi.edu.co.demo.exception.ArgumentRequiredException;
+import cundi.edu.co.demo.exception.ConflictException;
 import cundi.edu.co.demo.exception.ModelNotFoundException;
 import cundi.edu.co.demo.repository.IEstudianteRepo;
 import cundi.edu.co.demo.service.IEstudianteService;
@@ -81,22 +83,68 @@ public class EstudianteServiceImpl implements IEstudianteService{
 	}
 
 	@Override
-	public void guardar(Estudiante estudiante) {
+	public void guardar(Estudiante estudiante) throws ConflictException {
 		//Estudiante estu = this.repo.save(estudiante);
 		//return estu;
-		 this.repo.save(estudiante);
+		 /*Estudiante estudianteBusqueda = repo.findByCedula(estudiante.getCedula());
+		 if(estudianteBusqueda != null)
+			 throw new ConflictException("Cedula ya existe");
+		 
+		 estudianteBusqueda = repo.findByCorreo(estudiante.getCorreo());
+		 if(estudianteBusqueda != null)
+			 throw new ConflictException("Correo ya existe");	*/
+		
+		
+		 if(repo.existsByCedula(estudiante.getCedula())) {
+			 throw new ConflictException("Cedula ya existe");
+		 }
+		 if(repo.existsByCorreo(estudiante.getCorreo())) {
+			 throw new ConflictException("Correo ya existe");
+		 }		 
+		
+	     this.repo.save(estudiante);
+
 	}
 
 	@Override
-	public void editar(EstudianteDto estudiante) {
+	public void editar(Estudiante estudiante) throws ArgumentRequiredException, ModelNotFoundException, ConflictException {
 		// TODO Auto-generated method stub
+		
+		if(estudiante.getId() != null) {
+			if(validarExistenciaPorId(estudiante.getId())) {
+				
+				Estudiante estudianteAux = this.repo.findById(estudiante.getId()).get();
+				estudiante.setCedula(estudianteAux.getCedula());
+				
+				if(estudiante.getCorreo().equals(estudianteAux.getCorreo()))
+					this.repo.save(estudiante);
+				else {
+					if(!repo.existsByCorreo(estudiante.getCorreo())) {
+						this.repo.save(estudiante);
+					} else {
+						 throw new ConflictException("Correo ya existe");
+					}
+				}
+				
+			} else
+				throw new ModelNotFoundException("Estudiante no encontrado");		
+		} else {
+			throw new ArgumentRequiredException("IdEstudiante es requerido");
+		}
 		
 	}
 
 	@Override
-	public void eliminar(int i) {
-		// TODO Auto-generated method stub
+	public void eliminar(int idEstudiante) throws ModelNotFoundException {
 		
+		if(validarExistenciaPorId(idEstudiante))
+			this.repo.deleteById(idEstudiante);
+		else
+			throw new ModelNotFoundException("Estudiante no encontrado");
+	}
+	
+	private Boolean validarExistenciaPorId(int idEstudiante) {
+		return repo.existsById(idEstudiante);
 	}
 
 

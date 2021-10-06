@@ -1,9 +1,13 @@
 package cundi.edu.co.demo.exception;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -36,7 +40,25 @@ public class ExceptionHandlerPer extends ResponseEntityExceptionHandler {
 		ExceptionWrapper ew = new ExceptionWrapper(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
 					"Ha ocurrido un error", request.getDescription(false));
 		return new ResponseEntity<ExceptionWrapper>(ew, HttpStatus.INTERNAL_SERVER_ERROR);
-	}	
+	}
+	
+	@ExceptionHandler(ConflictException.class)
+	public final ResponseEntity<ExceptionWrapper> manejadorConflictException(ConflictException e,
+			WebRequest request){
+		e.printStackTrace();
+		ExceptionWrapper ew = new ExceptionWrapper(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT.toString(), 
+					e.getMessage(), request.getDescription(false));
+		return new ResponseEntity<ExceptionWrapper>(ew, HttpStatus.CONFLICT);
+	}		
+	
+	@ExceptionHandler(ArgumentRequiredException.class)
+	public final ResponseEntity<ExceptionWrapper> manejadorArgumentRequiredException(ArgumentRequiredException e,
+			WebRequest request){
+		e.printStackTrace();
+		ExceptionWrapper ew = new ExceptionWrapper(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.toString(), 
+					e.getMessage(), request.getDescription(false));
+		return new ResponseEntity<ExceptionWrapper>(ew, HttpStatus.BAD_REQUEST);
+	}		
 	
 	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<ExceptionWrapper> manejadorModelException(Exception e,
@@ -90,6 +112,15 @@ public class ExceptionHandlerPer extends ResponseEntityExceptionHandler {
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		// TODO Auto-generated method stub
 		ex.printStackTrace();
+		
+		Map<String, String> errors = new HashMap<>();
+		ex.getBindingResult().getAllErrors().forEach((error) -> {
+	        String fieldName = ((FieldError) error).getField();
+	        String errorMessage = error.getDefaultMessage();
+	        errors.put(fieldName, errorMessage);
+	    });
+		
+		
 		ExceptionWrapper ew = new ExceptionWrapper(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.toString(), 
 				ex.getMessage(), request.getDescription(false));
 		return new ResponseEntity<Object>(ew, HttpStatus.BAD_REQUEST);
