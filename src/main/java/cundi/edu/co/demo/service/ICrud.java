@@ -13,12 +13,12 @@ public interface ICrud<T, ID> {
 	
 	public Page<T> retornarPaginado(Pageable page);
 	
-	public T retonarPorId(ID idEstudiante) throws ModelNotFoundException;
+	public T retonarPorId(ID idObj) throws ModelNotFoundException;
 		
-	public void guardar(T estudiante)  throws ConflictException;
+	public void guardar(T obj)  throws ConflictException;
 	
-	public void editar(T estudiante)  throws ArgumentRequiredException, ModelNotFoundException, ConflictException;
+	public void editar(T obj)  throws ArgumentRequiredException, ModelNotFoundException, ConflictException;
 	
-	public void eliminar(int idEstudiante) throws ModelNotFoundException;	
+	public void eliminar(int obj) throws ModelNotFoundException;	
 
 }
