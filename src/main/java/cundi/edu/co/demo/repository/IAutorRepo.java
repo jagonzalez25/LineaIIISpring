@@ -14,6 +14,7 @@ import cundi.edu.co.demo.entity.Autor;
 public interface IAutorRepo  extends JpaRepository<Autor, Integer> {
 
 	
+	
 	@Query(value = "SELECT a FROM Autor a", nativeQuery = false)
 	Page<Autor> retornarPaginadoConsulta(Pageable pageable);
 	

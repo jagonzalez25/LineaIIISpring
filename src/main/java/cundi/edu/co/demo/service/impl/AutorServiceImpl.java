@@ -1,6 +1,5 @@
 package cundi.edu.co.demo.service.impl;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ public class AutorServiceImpl implements IAutorService {
 	
 	@Autowired
 	private IAutorRepo repo;
+	
 
 	@Override
 	public Page<Autor> retornarPaginado(int page, int size) {
@@ -92,7 +92,6 @@ public class AutorServiceImpl implements IAutorService {
 		// TODO Auto-generated method stub
 		this.repo.deleteById(idAutor);
 	}
-
 
 
 }

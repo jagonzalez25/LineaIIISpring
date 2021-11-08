@@ -19,10 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cundi.edu.co.demo.entity.Autor;
-import cundi.edu.co.demo.entity.Estudiante;
+import cundi.edu.co.demo.entity.AutorEditorial;
 import cundi.edu.co.demo.exception.ArgumentRequiredException;
 import cundi.edu.co.demo.exception.ConflictException;
 import cundi.edu.co.demo.exception.ModelNotFoundException;
+import cundi.edu.co.demo.service.IAutorEditorialService;
 import cundi.edu.co.demo.service.IAutorService;
 
 @RestController
@@ -31,6 +32,9 @@ public class AutorController {
 	
 	@Autowired
 	private IAutorService service;
+	
+	@Autowired
+	private IAutorEditorialService serviceAE;
 	
 	@GetMapping(value = "/obtenerPaginado" ,produces = "application/json")
 	public ResponseEntity<?> retonarPaginado(Pageable page) {
@@ -66,6 +70,14 @@ public class AutorController {
 	public ResponseEntity<?> eliminar(@PathVariable Integer idAutor) throws ModelNotFoundException {
 		service.eliminar(idAutor);
 		return new ResponseEntity<Autor>(HttpStatus.NO_CONTENT);	
-	}	
+	}
+	
+	@PostMapping(value = "/asociarEditorial", consumes = "application/json")
+	public ResponseEntity<?> asociarEditorail(@Valid @RequestBody AutorEditorial autorEditorial) throws ConflictException {
+		serviceAE.guardar(autorEditorial);
+		return new ResponseEntity<Object>(HttpStatus.CREATED);
+	}
+	
+	
 	
 }

@@ -36,6 +36,7 @@ public class Libro {
 	@Column(name = "numero_paginas", nullable = false)
 	private Integer numeroPaginas;
 	
+	//JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "id_autor", nullable = false, foreignKey = @ForeignKey(name = "FK_Autor_Libro"))
 	private Autor autor;
