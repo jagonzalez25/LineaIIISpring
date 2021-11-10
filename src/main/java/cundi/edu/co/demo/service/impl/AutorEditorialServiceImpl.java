@@ -1,9 +1,12 @@
 package cundi.edu.co.demo.service.impl;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cundi.edu.co.demo.entity.Autor;
 import cundi.edu.co.demo.entity.AutorEditorial;
@@ -67,6 +70,15 @@ public class AutorEditorialServiceImpl implements IAutorEditorialService{
 		// TODO Auto-generated method stub
 		//Validaciones pertinentes
 		this.repo.eliminarNativa(idAutor, idEditorial);
+	}
+
+	@Transactional
+	@Override
+	public void asociarAutorEditoial() {
+		this.repo.guardarNativo(1, 1, LocalDate.now());
+		this.repo.guardarNativo(2, 1, LocalDate.now());
+		this.repo.guardarNativo(3, 1, LocalDate.now());
+		this.repo.guardarNativo(6, 1, LocalDate.now());
 	}
 
 }

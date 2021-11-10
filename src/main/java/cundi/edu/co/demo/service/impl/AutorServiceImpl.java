@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cundi.edu.co.demo.entity.Autor;
 import cundi.edu.co.demo.exception.ArgumentRequiredException;
@@ -14,13 +15,13 @@ import cundi.edu.co.demo.exception.ConflictException;
 import cundi.edu.co.demo.exception.ModelNotFoundException;
 import cundi.edu.co.demo.repository.IAutorRepo;
 import cundi.edu.co.demo.service.IAutorService;
+import cundi.edu.co.demo.service.ILibro;
 
 @Service
 public class AutorServiceImpl implements IAutorService {
 	
 	@Autowired
 	private IAutorRepo repo;
-	
 
 	@Override
 	public Page<Autor> retornarPaginado(int page, int size) {
@@ -63,8 +64,11 @@ public class AutorServiceImpl implements IAutorService {
 		}
 	}
 
+	@Transactional
 	@Override
 	public void guardar(Autor autor) throws ConflictException {
+		
+		
 		// TODO Auto-generated method stub
 		//autor.setLibro(null); En caso que solo se quiera guardar el autor sin libros
 		if(autor.getLibro() != null) {
