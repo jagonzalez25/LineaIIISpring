@@ -91,4 +91,13 @@ public class UsuarioServiceImpl implements IUsuarioService, UserDetailsService {
 		
 	}
 
+
+	@Override
+	public int sumar(int... num) {
+		int resultado = 0;
+		for (int i : num) 
+			resultado += i;
+		return resultado;
+	}
+
 }

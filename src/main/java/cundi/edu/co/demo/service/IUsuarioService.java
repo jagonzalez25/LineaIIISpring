@@ -4,5 +4,7 @@ import cundi.edu.co.demo.entity.Usuario;
 
 public interface IUsuarioService extends ICrud<Usuario, Integer> {
 	
+	public int sumar(int... num);
+	
 
 }
